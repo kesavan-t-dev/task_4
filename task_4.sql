@@ -80,22 +80,105 @@ ON
 
 -- Query 2: Retrieve all projects and any associated tasks, including projects with no tasks
 
+SELECT * FROM task
+
 DELETE FROM task
 WHERE project_id = 2;
 
-
-SELECT * FROM task
-
-DROP TABLE project
 
 SELECT 
     p.project_id,
     p.project_name,
     t.task_id,
-    t.task_name
+    t.task_name,
+    t.prioritys,
+    t.statuss,
+    t.due_date
 FROM project p
 LEFT JOIN task t 
     ON p.project_id = t.project_id
-ORDER BY p.project_id;
+ORDER BY p.project_id, t.task_id;
 
 
+-- Query 3: Retrieve all tasks and any associated projects, including tasks with no associated project
+
+
+--Display the result of the both table 
+SELECT * FROM task, project
+
+--insert a value to check this 
+INSERT INTO task (
+    task_name, 
+    descriptions, 
+    starts_date, 
+    due_date, 
+    prioritys, 
+    statuss, 
+    project_id
+)
+VALUES (
+    'Orphan Task', 
+    'This task has no associated project', 
+    '2025-02-01', 
+    '2025-02-10', 
+    'High', 
+    'Pending', 
+    NULL
+);
+
+SELECT 
+    t.task_id,
+    t.task_name,
+    t.prioritys,
+    t.statuss,
+    t.due_date,
+    p.project_id,
+    p.project_name
+FROM task t
+LEFT JOIN project p 
+    ON t.project_id = p.project_id
+ORDER BY t.task_id;
+
+-- Query 4: Add New Column as parent_project_id as nullable in project Table, Enter valid Record for prvent_project_id 
+
+--first add nullable column
+ALTER TABLE project
+ADD parent_project_id INT NULL;
+
+--Display project table
+SELECT * FROM project
+
+---- Insert a record parent_project_id
+INSERT INTO project (
+    project_name, 
+    starts_date, 
+    end_date, 
+    budget, 
+    statuss,
+    parent_project_id
+)
+vALUES (
+    'Mobile Apps Development', 
+    '2025-02-01', 
+    '2025-06-30', 
+    50000, 
+    'Completed',
+    1
+);
+
+DELETE FROM project
+WHERE project_name = 'Mobile Apps Development'
+
+-- Query
+SELECT
+    p.project_name AS Parent_Project,
+    c.project_name AS Child_Project
+FROM
+    project c
+JOIN
+    project p
+ON
+    c.parent_project_id= p.project_id;
+
+
+-- Query 5: Returns the current date and time 
