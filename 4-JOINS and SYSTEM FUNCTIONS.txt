@@ -1,0 +1,12 @@
+Joins and other System Functions for Data Manipulation(sys_agg), Range(), Cross apply
+
+Query 1: Retrieve tasks along with their project details
+Query 2: Retrieve all projects and any associated tasks, including projects with no tasks
+Query 3: Retrieve all tasks and any associated projects, including tasks with no associated project
+Query 4: Add New Column as ParentProjectId as nullable in project Table, Enter valid Record for ParentProjectID 
+use self Join to get Parent and Children Details.
+Query 5: Returns the current date and time (there are two function verify those).
+Query 6: Extracts a specific part of a date of Any record in Project Start and End Date.
+Query 7: Returns the difference between two dates of Any record in Project Start and End Date.
+Query 8: Formats a date to 'yyyy-MM-dd' of Any record in Project Start Date.
+Query 9: Retrieve Tasks for Each Project Using CROSS APPLY.
