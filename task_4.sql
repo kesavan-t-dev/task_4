@@ -182,3 +182,56 @@ ON
 
 
 -- Query 5: Returns the current date and time 
+SELECT 
+    GETDATE() AS CurrentDateTime_GETDATE,
+    SYSDATETIME() AS CurrentDateTime_SYSDATETIME;
+
+-- Query 6: Extracts a specific part of a date of Any record in Project Start and End Date.
+SELECT 
+    project_name,
+    YEAR(starts_date) AS Start_Year,
+    MONTH(starts_date) AS Start_Month,
+    DAY(starts_date) AS Start_Day,
+    YEAR(end_date) AS End_Year,
+    MONTH(end_date) AS End_Month,
+    DAY(end_date) AS End_Day
+FROM 
+    project;
+
+
+
+-- Query 7: Returns the difference between two dates of Any record in Project Start and End Date.
+SELECT 
+    project_name,
+    DATEDIFF(DAY, starts_date, end_date) AS Duration_In_Days
+FROM 
+    project;
+
+-- Query 8: Formats a date to 'yyyy-MM-dd' of Any record in Project Start Date.
+
+SELECT 
+    project_name,
+    FORMAT(starts_date, 'yyyy-MM-dd') AS Formatted_Start_Date
+FROM 
+    project;
+
+
+-- Query 9: Retrieve Tasks for Each Project Using CROSS APPLY.
+
+SELECT 
+    p.project_name,
+    t.task_id,
+    t.task_name,
+    t.statuss
+FROM 
+    project p
+CROSS APPLY (
+    SELECT 
+        task_id,
+        task_name,
+        statuss
+    FROM 
+        task
+    WHERE 
+        task.project_id = p.project_id
+) t;
