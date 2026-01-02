@@ -27,22 +27,29 @@ VALUES
     ('Annual Report Preparation', '2025-04-01', '2025-12-31', 12000.00, 'In Progress')
 GO
 
---task table creation
-CREATE TABLE task(
-	task_id INT IDENTITY(1,1) PRIMARY KEY,
-	task_name VARCHAR(150) NOT NULL,
-	descriptions VARCHAR(255) NOT NULL,
-	starts_date DATE NOT NULL,
-	due_date DATE NOT NULL,
-		--Constraints for end date field
-	    CONSTRAINT CHECK_due_date_After_starts_date 
-          CHECK (due_date >= starts_date),
-	prioritys VARCHAR(150) 
-		CONSTRAINT CK_Task_Priority CHECK (prioritys IN ('Low', 'Medium', 'High')),
-	statuss VARCHAR(70) DEFAULT 'Pending',
-	project_id INT FOREIGN KEY REFERENCES project(project_id)
+
+
+SELECT * FROM task
+-- Drop the table if it already exists
+IF OBJECT_ID('dbo.task', 'U') IS NOT NULL
+    DROP TABLE dbo.task;
+GO
+
+-- Create the table
+CREATE TABLE dbo.task (
+    task_id INT IDENTITY(1,1) PRIMARY KEY,
+    task_name VARCHAR(150) NOT NULL,
+    descriptions VARCHAR(255) NOT NULL,
+    starts_date DATE NOT NULL,
+    due_date DATE NOT NULL,
+    CONSTRAINT CHECK_due_date_After_starts_date CHECK (due_date >= starts_date),
+    prioritys VARCHAR(150) 
+        CONSTRAINT CK_Task_Priority CHECK (prioritys IN ('Low', 'Medium', 'High')),
+    statuss VARCHAR(70) DEFAULT 'Pending',
+    project_id INT FOREIGN KEY REFERENCES project(project_id)
 );
 GO
+
 
 --inserting task values
 INSERT INTO task (task_name, descriptions, starts_date, due_date, prioritys, statuss, project_id)
@@ -237,3 +244,5 @@ CROSS APPLY (
     WHERE 
         task.project_id = p.project_id
 ) t;
+
+
