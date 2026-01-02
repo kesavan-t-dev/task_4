@@ -81,10 +81,10 @@ ON
 -- Query 2: Retrieve all projects and any associated tasks, including projects with no tasks
 
 SELECT * FROM task
-
+/*
 DELETE FROM task
 WHERE project_id = 2;
-
+*/
 
 SELECT 
     p.project_id,
@@ -105,7 +105,7 @@ ORDER BY p.project_id, t.task_id;
 
 --Display the result of the both table 
 SELECT * FROM task, project
-
+/*  
 --insert a value to check this 
 INSERT INTO task (
     task_name, 
@@ -125,6 +125,8 @@ VALUES (
     'Pending', 
     NULL
 );
+*/
+-- Query
 
 SELECT 
     t.task_id,
@@ -165,10 +167,10 @@ vALUES (
     'Completed',
     1
 );
-
+/*
 DELETE FROM project
 WHERE project_name = 'Mobile Apps Development'
-
+*/
 -- Query
 SELECT
     p.project_name AS Parent_Project,
@@ -203,7 +205,7 @@ FROM
 -- Query 7: Returns the difference between two dates of Any record in Project Start and End Date.
 SELECT 
     project_name,
-    DATEDIFF(DAY, starts_date, end_date) AS Duration_In_Days
+    DATEDIFF(DAY, starts_date, end_date) AS In_Days
 FROM 
     project;
 
