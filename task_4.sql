@@ -2,24 +2,25 @@
 --USE DATABASE
 use kesavan_db
 GO
+drop table project
 --Project Table
 CREATE TABLE project
 (
 	project_id INT IDENTITY(1,1) PRIMARY KEY,
 	project_name VARCHAR(150) UNIQUE NOT NULL,
-	starts_date DATE NOT NULL,
+	start_date DATE NOT NULL,
 	end_date DATE NOT NULL,
 	budget MONEY ,
-	statuss VARCHAR(50) DEFAULT 'Not Started',
+	status VARCHAR(50) DEFAULT 'Not Started',
 
 	--Constraints for end date field
 	    CONSTRAINT CHECK_end_date_After_starts_date 
-        CHECK (end_date >= starts_date),
+        CHECK (end_date >= start_date),
 )
 GO
 
 --Inserting values:
-INSERT INTO project (project_name, starts_date, end_date, budget, statuss)
+INSERT INTO project (project_name, start_date, end_date, budget, status)
 VALUES 
     ('Website Redesign', '2025-01-01', '2025-06-30', 15000.00, 'In Progress'),
     ('Mobile App Development', '2025-02-15', '2025-07-15', 25000.00, 'Not Started'),
@@ -39,20 +40,20 @@ GO
 CREATE TABLE dbo.task (
     task_id INT IDENTITY(1,1) PRIMARY KEY,
     task_name VARCHAR(150) NOT NULL,
-    descriptions VARCHAR(255) NOT NULL,
-    starts_date DATE NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    start_date DATE NOT NULL,
     due_date DATE NOT NULL,
-    CONSTRAINT CHECK_due_date_After_starts_date CHECK (due_date >= starts_date),
-    prioritys VARCHAR(150) 
-        CONSTRAINT CK_Task_Priority CHECK (prioritys IN ('Low', 'Medium', 'High')),
-    statuss VARCHAR(70) DEFAULT 'Pending',
+    CONSTRAINT CHECK_due_date_After_starts_date CHECK (due_date >= start_date),
+    priority VARCHAR(150) 
+        CONSTRAINT CK_Task_Priority CHECK (priority IN ('Low', 'Medium', 'High')),
+    status VARCHAR(70) DEFAULT 'Pending',
     project_id INT FOREIGN KEY REFERENCES project(project_id)
 );
 GO
 
 
 --inserting task values
-INSERT INTO task (task_name, descriptions, starts_date, due_date, prioritys, statuss, project_id)
+INSERT INTO task (task_name, description, start_date, due_date, priority, status, project_id)
 VALUES 
     ('Initial Design', 'Design phase for the new website', '2025-01-02', '2025-02-28', 'High', 'Completed', 1),
     ('UI Development', 'Development of user interface components', '2025-03-01', '2025-05-15', 'Medium', 'In Progress', 1),
@@ -72,12 +73,12 @@ VALUES
 SELECT 
     t.task_id,
     t.task_name,
-    t.prioritys,
+    t.priority,
     p.project_id,
     p.project_name,
-    p.starts_date,
+    p.start_date,
     p.end_date,
-    t.statuss
+    t.status
 FROM 
     task t
 INNER JOIN 
@@ -98,8 +99,8 @@ SELECT
     p.project_name,
     t.task_id,
     t.task_name,
-    t.prioritys,
-    t.statuss,
+    t.priority,
+    t.status,
     t.due_date
 FROM project p
 LEFT JOIN task t 
@@ -119,7 +120,7 @@ INSERT INTO task (
     descriptions, 
     starts_date, 
     due_date, 
-    prioritys, 
+    priority, 
     statuss, 
     project_id
 )
@@ -138,8 +139,8 @@ VALUES (
 SELECT 
     t.task_id,
     t.task_name,
-    t.prioritys,
-    t.statuss,
+    t.priority,
+    t.status,
     t.due_date,
     p.project_id,
     p.project_name
@@ -160,10 +161,10 @@ SELECT * FROM project
 ---- Insert a record parent_project_id
 INSERT INTO project (
     project_name, 
-    starts_date, 
+    start_date, 
     end_date, 
     budget, 
-    statuss,
+    status,
     parent_project_id
 )
 vALUES (
@@ -198,9 +199,9 @@ SELECT
 -- Query 6: Extracts a specific part of a date of Any record in Project Start and End Date.
 SELECT 
     project_name,
-    YEAR(starts_date) AS Start_Year,
-    MONTH(starts_date) AS Start_Month,
-    DAY(starts_date) AS Start_Day,
+    YEAR(start_date) AS Start_Year,
+    MONTH(start_date) AS Start_Month,
+    DAY(start_date) AS Start_Day,
     YEAR(end_date) AS End_Year,
     MONTH(end_date) AS End_Month,
     DAY(end_date) AS End_Day
@@ -212,7 +213,7 @@ FROM
 -- Query 7: Returns the difference between two dates of Any record in Project Start and End Date.
 SELECT 
     project_name,
-    DATEDIFF(DAY, starts_date, end_date) AS In_Days
+    DATEDIFF(DAY, start_date, end_date) AS In_Days
 FROM 
     project;
 
@@ -220,7 +221,7 @@ FROM
 
 SELECT 
     project_name,
-    FORMAT(starts_date, 'yyyy-MM-dd') AS Formatted_Start_Date
+    FORMAT(start_date, 'yyyy-MM-dd') AS Formatted_Start_Date
 FROM 
     project;
 
@@ -231,14 +232,14 @@ SELECT
     p.project_name,
     t.task_id,
     t.task_name,
-    t.statuss
+    t.status
 FROM 
     project p
 CROSS APPLY (
     SELECT 
         task_id,
         task_name,
-        statuss
+        status
     FROM 
         task
     WHERE 
